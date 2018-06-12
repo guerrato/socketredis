@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\UserSignedUp;
+use Illuminate\Support\Facades\Redis;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,5 +14,15 @@
 */
 
 Route::get('/', function () {
+    
+    $data = [
+        'event' => 'UserSignedUp',
+        'data' => [
+            'username' => Request::query('name')
+        ]
+    ];
+
+    Redis::publish('channel', json_encode($data));
+    
     return view('welcome');
 });
